@@ -1,6 +1,6 @@
 import os
-import sys
-from src.exception import CustomException
+import sys #to use CustomException
+from src.exception import CustomException #a customised class in exception.py
 from src.logger import logging
 import pandas as pd
 
@@ -12,11 +12,16 @@ from src.components.data_transformation import DataTransformationConfig
 
 from src.components.model_trainer import ModelTrainerConfig
 from src.components.model_trainer import ModelTrainer
+"""
+The @dataclass decorator is used here to automatically generate special methods like __init__(), __repr__(), __eq__(), and others for the class, based on the class attributes defined.
+The dataclass is particularly useful in cases like this because it automatically generates many utility methods and makes the class easy to use, especially for storing 'plain' data structures. 
+It reduces the amount of boilerplate code you have to write to create classes that are mainly containers for data fields.
+"""
 @dataclass
-class DataIngestionConfig:
-    train_data_path: str=os.path.join('artifacts',"train.csv")
-    test_data_path: str=os.path.join('artifacts',"test.csv")
-    raw_data_path: str=os.path.join('artifacts',"data.csv")
+class DataIngestionConfig:#This class is designed to hold configuration paths for different datasets
+    train_data_path: str=os.path.join('artifacts',"train.csv") #the training data file (train.csv) is expected to be in an artifacts directory relative to the location where this script is run.
+    test_data_path: str=os.path.join('artifacts',"test.csv") #The use of os.path.join is crucial as it constructs a file path that is operating system agnostic, ensuring that the file paths are 
+    raw_data_path: str=os.path.join('artifacts',"data.csv") #correctly specified on platforms like Windows, Linux, or MacOS 
 
 class DataIngestion:
     def __init__(self):

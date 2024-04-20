@@ -18,14 +18,14 @@ from src.utils import save_object
 class DataTransformationConfig:
     preprocessor_obj_file_path=os.path.join('artifacts',"proprocessor.pkl")
 
-class DataTransformation:
-    def __init__(self):
+class DataTransformation: #To encapsulate the process of creating a data transformation pipeline that includes handling of both numerical and categorical data.
+    def __init__(self): #to initialize the class with an instance of DataTransformationConfig
         self.data_transformation_config=DataTransformationConfig()
 
-    def get_data_transformer_object(self):
+    def get_data_transformer_object(self): #This method constructs and returns a preprocessing pipeline for data transformation using sklearn's pipeline functionality.
         '''
-        This function si responsible for data trnasformation
-        
+        This code defines a  class named DataTransformation that is used to create a preprocessing pipeline for data transformation in machine learning projects.
+        The DataTransformation class provides a structured way to assemble a data preprocessing pipeline that handles both numerical and categorical data using scikit-learn's Pipeline and ColumnTransformer classes. This setup ensures that all necessary data transformations (imputation, encoding, scaling) are performed in a way that is suitable for feeding into a machine learning model. The use of custom logging and exception handling helps in maintaining robustness and traceability of the process.
         '''
         try:
             numerical_columns = ["writing_score", "reading_score"]
@@ -39,8 +39,8 @@ class DataTransformation:
 
             num_pipeline= Pipeline(
                 steps=[
-                ("imputer",SimpleImputer(strategy="median")),
-                ("scaler",StandardScaler())
+                ("imputer",SimpleImputer(strategy="median")),#filling missing values with the median
+                ("scaler",StandardScaler()) #standardizing features by removing the mean and scaling to unit variance
 
                 ]
             )
@@ -48,9 +48,9 @@ class DataTransformation:
             cat_pipeline=Pipeline(
 
                 steps=[
-                ("imputer",SimpleImputer(strategy="most_frequent")),
-                ("one_hot_encoder",OneHotEncoder()),
-                ("scaler",StandardScaler(with_mean=False))
+                ("imputer",SimpleImputer(strategy="most_frequent")),#replacing missing values with the most frequent value
+                ("one_hot_encoder",OneHotEncoder()),#transforming categorical variables into a form that could be provided to ML algorithms
+                ("scaler",StandardScaler(with_mean=False))#especially important to apply scaling after one-hot encoding to prevent features with larger categories dominating those with fewer categories
                 ]
 
             )
@@ -58,7 +58,7 @@ class DataTransformation:
             logging.info(f"Categorical columns: {categorical_columns}")
             logging.info(f"Numerical columns: {numerical_columns}")
 
-            preprocessor=ColumnTransformer(
+            preprocessor=ColumnTransformer(#Combines both the numerical and categorical pipelines into a single transformer object that applies appropriate transformations to each column type
                 [
                 ("num_pipeline",num_pipeline,numerical_columns),
                 ("cat_pipelines",cat_pipeline,categorical_columns)
@@ -71,7 +71,7 @@ class DataTransformation:
             return preprocessor
         
         except Exception as e:
-            raise CustomException(e,sys)
+            raise CustomException(e,sys)#If an exception is caught, it raises a CustomException, which is a custom-defined exception class for the project.
         
     def initiate_data_transformation(self,train_path,test_path):
 
@@ -108,7 +108,7 @@ class DataTransformation:
 
             logging.info(f"Saved preprocessing object.")
 
-            save_object(
+            save_object(#saves pickel file
 
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj
