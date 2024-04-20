@@ -2,7 +2,7 @@ pandas
 numpy
 seaborn
 matplotlib
-sklearn==1.2.1
+sklearn
 catboost
 xgboost
 Flask
